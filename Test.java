@@ -34,10 +34,20 @@ public class Test {
 		queue.enqueue(2);
 		queue.enqueue(3);
 		queue.enqueue(4);
-		// test empty & dequeue
+		// test isEmpty & dequeue
 		while (!queue.isEmpty())
 			System.out.println(queue.dequeue());
 		System.out.println("/* Stack of Integers ---------------------------- */");
+		Stack<Integer> stack = new Stack<>(3);
+		// test push
+		System.out.println("push 1 " + stack.push(1));
+		System.out.println("push 2 " + stack.push(2));
+		System.out.println("push 3 " + stack.push(3));
+		System.out.println("push 4 " + stack.push(4));
+		// test isEmpty & pop
+		while (!stack.isEmpty())
+			System.out.println("pop " + stack.pop());
+						
 	}
 
 }
