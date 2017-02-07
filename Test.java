@@ -47,7 +47,18 @@ public class Test {
 		// test isEmpty & pop
 		while (!stack.isEmpty())
 			System.out.println("pop " + stack.pop());
-						
+		System.out.println("/* Deque of Integers ---------------------------- */");
+		Deque<Integer> deque = new Deque<>(3);
+		// test push
+		System.out.println("push 1 " + deque.push(1));
+		System.out.println("push 2 " + deque.push(2));
+		System.out.println("push 3 " + deque.push(3));
+		System.out.println("push 4 " + deque.push(4));
+		// test isEmpty & pop
+		System.out.println("pop " + deque.pop());
+		System.out.println("poll " + deque.poll());
+		System.out.println("pop " + deque.pop());
+								
 	}
 
 }
