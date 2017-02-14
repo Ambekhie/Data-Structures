@@ -37,6 +37,7 @@ public class Test {
 		// test isEmpty & dequeue
 		while (!queue.isEmpty())
 			System.out.println(queue.dequeue());
+		
 		System.out.println("/* Stack of Integers ---------------------------- */");
 		Stack<Integer> stack = new Stack<>(3);
 		// test push
@@ -47,6 +48,7 @@ public class Test {
 		// test isEmpty & pop
 		while (!stack.isEmpty())
 			System.out.println("pop " + stack.pop());
+		
 		System.out.println("/* Deque of Integers ---------------------------- */");
 		Deque<Integer> deque = new Deque<>(3);
 		// test push
@@ -58,7 +60,24 @@ public class Test {
 		System.out.println("pop " + deque.pop());
 		System.out.println("poll " + deque.poll());
 		System.out.println("pop " + deque.pop());
-								
+		
+		System.out.println("/* Trie of Characters ---------------------------- */");
+		Trie trie = new Trie();
+		// test insert word
+		System.out.println("insert potato " + trie.insert("potato"));
+		System.out.println("insert btatsaya " + trie.insert("btatsaya"));
+		System.out.println("insert poo " + trie.insert("poo"));
+		System.out.println("insert null " + trie.insert(null));
+		System.out.println("insert '' " + trie.insert(""));
+		// test find word
+		System.out.println("find pOtaTo " + trie.find("potato"));
+		System.out.println("find null " + trie.find(null));
+		System.out.println("find PoO " + trie.find("PoO"));
+		// test delete word
+		System.out.println("delete PoO " + trie.delete("PoO"));
+		System.out.println("find PoO " + trie.find("PoO"));
+		System.out.println("delete foo " + trie.find("foo"));
+		return;
 	}
 
 }
