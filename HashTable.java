@@ -1,154 +1,127 @@
-import java.util.LinkedList;
-/* 
-	HASHING by CHAINING 
+public abstract class HashTable<K, V> {
+	protected Object[] table = null;
+	protected int size = 5;						//  Initial size (1 << 5)
+	protected final int MAX_SIZE = 30;			//	MAX SIZE (1 << 30) 1GB
+	protected int elements = 0;
+	protected int paramA = 0;						//  random paramA for universal hashing
+	protected int paramB = 0;						//  random paramB for universal hashing
+	protected double loadFactor = 0.0;			//	Load Factor (average)
+	protected final double MAX_LOAD_FACTOR = 0.7;
+	protected final int PRIME_NUMBER = 1073741827; // next prime greater to max size
+	protected enum State {
+		DELETED,
+		EXIST
+	}
+/**
+ * Class constructor intializing table 
+ * generating random params
 */
-public class HashTable <K, V> {
-	private Object[] table = null;
-	private int sizePower = 5;				// Initial SIZE (1 << 5)
-	private int elements = 0;
-	private int paramA = 0;					// Random Parameter A
-	private int paramB = 0;					// Random parameter B  for Universal Hashing 
-	private final int MAX_SIZE_POWER = 30;	// table max size (1 << 30)
-	private final int PRIME_NUMBER = 1073741827; // next prime greater to max size
 	public HashTable() {
-		this.table = new Object[(1 << this.sizePower)];
+		this.table = new Object[(1 << this.size)];
 		this.paramA = (int)(Math.random() * PRIME_NUMBER);
 		this.paramB = (int)(Math.random() * PRIME_NUMBER);
 	}
-/* 
-	purpose : 
-	Various Techniques for hashing key 
-	@param key 
-	@return int
+/**
+ *	puts a key and value to the table 
+ *	@param Key to be hashed and inserted
+ *  @param value to be inserted for the specified key
+ *	@return false if key already exist false otherwise
 */
-	public int hashByUniversalHashing(K key) {
-		int size = (1 << this.sizePower);
+	public abstract boolean put(K key, V value);
+/**
+ *	lookup a key in the table 
+ *	@param Key to be hashed and looked for
+ *  @return true if key exists false otherwise
+*/
+	public abstract boolean containsKey(K key);	
+/**
+ *	deletes a key from a table if exist 
+ *	@param key to delete
+ *  @return true if key exist, false otherwise
+*/
+	public abstract boolean delete(K key);
+/**
+ *	gets a value from table coressponding to key 
+ *	@param key to get its value
+ *  @return value if key exist, null otherwise
+*/
+	public abstract V get(K key);
+/**
+ *	doubles table size and rehashes all elements  
+ *	@param no params
+ *  @return no return
+*/
+	protected abstract void rehashTable();
+ /**
+ *	updates current load factor of table 
+ *	@param no params
+ *  @return no return
+*/
+	protected void updateLoadFactor() {
+		this.loadFactor = ((double)this.elements/(1 << this.size));
+		if (this.loadFactor >= MAX_LOAD_FACTOR && this.size < MAX_SIZE) {
+			this.rehashTable();
+		}	
+	}
+/**
+ *	hash key by universal hash family
+ *	@param Key to be hashed
+ *  @return int hash code compressed to current table size
+*/
+	protected int hashByUniversalHashing(K key) {
+		int size = (1 << this.size);
 		return ((Math.abs(this.paramA * key.hashCode() + this.paramB) % (PRIME_NUMBER)) % size);
 	}
-	public int hashByMultiplication(K key) {
-		int r = sizePower;
-		int w = MAX_SIZE_POWER;
+/**
+ *	hash key by multiplication
+ *	@param Key to be hashed
+ *  @return int hash code compressed to current table size
+*/
+	protected int hashByMultiplication(K key) {
+		int r = size;
+		int w = MAX_SIZE;
 		return ((Math.abs(key.hashCode() * this.paramA) % (1 << w)) >> w - r);
 	}
-	public int hashByDivision(K key) {
-		int size = (1 << this.sizePower);
-		return (key.hashCode() % size);
+/**
+ *	hash key by division
+ *	@param Key to be hashed
+ *  @return int hash code compressed to current table size
+*/	
+	protected int hashByDivision(K key) {
+		return (key.hashCode() % (1 << this.size));
 	}
-/*
-	purpose : 
-	Rehash function for a better load factor
-	optimization for better worst case complexity
-	@param no args
-	@return void
+/**
+ *	checks if table is full 
+ *	@param no params
+ *  @return true if table is full, false otherwise
 */
-	private void updateLoadFactor() {
-		double loadFactor = ((double)this.elements/(1 << this.sizePower));
-		if (loadFactor > 0.7 && this.sizePower < MAX_SIZE_POWER) 
-			rehashTable();
-	}
-	
-	private void rehashTable() {
-		Object[] temp = this.table;
-		this.sizePower++; // double current size
-		int size = (1 << this.sizePower);
-		this.table = new Object[size];
-		for (Object object : temp) {
-			if (object == null)
-				continue;
-			LinkedList<Pair> pairs = (LinkedList<Pair>) object;
-			for (Pair pair : pairs) {
-				this.put(pair.key, pair.value);
-			}
-		}
-	}
-/*
-	purpose : 
-	Remove key from hashtable if exist 
-	@param key 
-	@return true if key exist 
+	public boolean isFull() {
+		return (this.elements == (1 << this.size));
+	}	
+/**
+ *	checks if table is Empty 
+ *	@param no params
+ *  @return true if table is Empty, false otherwise
 */
-	public boolean remove(K key) {
-		if (!this.containsKey(key))
-			return false;
-		int hashCode = hashByUniversalHashing(key);
-		LinkedList<Pair> pairs = (LinkedList<Pair>)this.table[hashCode];
-		Pair required = null;
-		for (Pair pair : pairs) {
-			if (pair.key.equals(key)) {
-				required = pair;
-				break;
-			}
-		}	
-		if (required != null) {
-			pairs.remove(required);
-			this.elements--;
-			updateLoadFactor();
-			return true;
-		}
-		return false;
-	}
-/*
-	purpose : 
-	put key if not exist 
-	@param key, value 
-	@return false if key already exist else true 
+	public boolean isEmpty() {
+		return (this.elements == 0);
+	}	
+/**
+ *	checks if table if full 
+ *	@param no params
+ *  @return true if table is full, false otherwise
 */
-	public boolean put(K key, V value) {
-		if (this.containsKey(key))
-			return false;
-		Pair pair = new Pair(key, value);
-		int hashCode = hashByUniversalHashing(key);
-		if (this.table[hashCode] == null)
-			this.table[hashCode] = new LinkedList<Pair>();
-		LinkedList<Pair> pairs = (LinkedList<Pair>)this.table[hashCode];
-		pairs.add(pair);
-		this.elements++;
-		updateLoadFactor();
-		return true;
-	}
-/*
-	purpose : 
-	return value from hashtable if exist 
-	@param key 
-	@return value if key exist 
-*/
-	public V get(K key) {
-		if (!this.containsKey(key))
-			return null;
-		int hashCode = hashByUniversalHashing(key);
-		LinkedList<Pair> pairs = (LinkedList<Pair>)this.table[hashCode];
-		for (Pair pair : pairs) {
-			if (pair.key.equals(key)) {
-				return pair.value;
-			}
-		}
-		return null;
-	}
-/*
-	purpose : 
-	check key if exist 
-	@param key 
-	@return true if key exist 
-*/
-	public boolean containsKey(K key) {
-		int hashCode = hashByUniversalHashing(key);
-		LinkedList<Pair> pairs = (LinkedList<Pair>)this.table[hashCode];
-		if (pairs == null)
-			return false;
-		for (Pair pair : pairs) {
-			if (pair.key.equals(key)) {
-				return true;
-			}
-		}	
-		return false;
-	}
-
-	private class Pair {
+	protected class Pair {
 		public K key = null;
 		public V value = null;
+		public State state = null;
+		public Pair() {
+			state = State.DELETED;
+		}
 		public Pair(K key, V value) {
 			this.key = key;
 			this.value = value;
+			this.state = State.EXIST;
 		}
-	}
+	}		
 }
