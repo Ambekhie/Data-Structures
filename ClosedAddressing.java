@@ -29,7 +29,7 @@ public class ClosedAddressing<K, V> extends HashTable<K, V> {
 
 	@Override
 	public boolean delete(K key) {
-		if (!this.containsKey(key))
+		if (key == null || !this.containsKey(key))
 			return false;
 		int hashCode = hashByUniversalHashing(key);
 		LinkedList<Pair> pairs = (LinkedList<Pair>)this.table[hashCode];
@@ -51,7 +51,7 @@ public class ClosedAddressing<K, V> extends HashTable<K, V> {
 
 	@Override
 	public boolean put(K key, V value) {
-		if (this.containsKey(key))
+		if (key == null || this.containsKey(key))
 			return false;
 		Pair pair = new Pair(key, value);
 		int hashCode = hashByUniversalHashing(key);
@@ -66,7 +66,7 @@ public class ClosedAddressing<K, V> extends HashTable<K, V> {
 
 	@Override
 	public V get(K key) {
-		if (!this.containsKey(key))
+		if (key == null || !this.containsKey(key))
 			return null;
 		int hashCode = hashByUniversalHashing(key);
 		LinkedList<Pair> pairs = (LinkedList<Pair>)this.table[hashCode];
@@ -80,6 +80,8 @@ public class ClosedAddressing<K, V> extends HashTable<K, V> {
 
 	@Override
 	public boolean containsKey(K key) {
+		if (key == null)
+			return false;
 		int hashCode = hashByUniversalHashing(key);
 		LinkedList<Pair> pairs = (LinkedList<Pair>)this.table[hashCode];
 		if (pairs == null)

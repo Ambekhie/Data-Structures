@@ -105,6 +105,37 @@ public class Test {
 		System.out.println("extract max " + heap.extractMax());
 		System.out.println("extract max " + heap.extractMax());
 		System.out.println("extract max 'EMPTY' " + heap.extractMax());
+		System.out.println("/* HashTable of OpenAddressing ---------------------------- */");
+		HashTable<Integer, String> table = new OpenAddressing<>();
+		// test insert word
+		System.out.println("insert potato " + table.put(1, "potato"));
+		System.out.println("insert btatsaya " + table.put(2, "btatsaya"));
+		System.out.println("insert poo " + table.put(3, "poo"));
+		System.out.println("insert null " + table.put(4, null));
+		// test max extract word
+		System.out.println("get poo " + table.get(3));
+		//test delete
+		System.out.println("extract potato " + table.delete(1));
+		System.out.println("extract btatsaya " + table.delete(2));
+		System.out.println("extract foo " + table.delete(6));
+		System.out.println("extract poo " + table.delete(3));
+		System.out.println("extract null " + table.delete(null));
+		System.out.println("/* HashTable of ClosedAddressing ---------------------------- */");
+		table = new ClosedAddressing<>();
+		// test insert word
+		System.out.println("insert potato " + table.put(1, "potato"));
+		System.out.println("insert btatsaya " + table.put(2, "btatsaya"));
+		System.out.println("insert poo " + table.put(3, "poo"));
+		System.out.println("insert null " + table.put(4, null));
+		// test max extract word
+		System.out.println("get poo " + table.get(3));
+		//test delete
+		System.out.println("extract potato " + table.delete(1));
+		System.out.println("extract btatsaya " + table.delete(2));
+		System.out.println("extract foo " + table.delete(6));
+		System.out.println("extract poo " + table.delete(3));
+		System.out.println("extract null " + table.delete(null));
+		
 		return;
 	}
 
