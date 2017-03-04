@@ -9,21 +9,21 @@ public class Deque<E> {
 	 }
 	 /* add element to the end */
 	 public boolean push(E data) {
-				if (data == null)
-					throw new NullPointerException();
-				if (this.size >= this.threshold)
-					return false;
-				this.size++;
-				Node<E> current = new Node<>(data);
-				if (this.isEmpty()) {
-					this.tail = current;
-					this.head = current;
-					return true;
-				}
-				this.tail.next = current;
-				current.prev = this.tail;
-				this.tail = current;
-				return true;
+		if (data == null)
+			throw new NullPointerException();
+		if (this.size >= this.threshold)
+			return false;
+		this.size++;
+		Node<E> current = new Node<>(data);
+		if (this.isEmpty()) {
+			this.tail = current;
+			this.head = current;
+			return true;
+		}
+		this.tail.next = current;
+		current.prev = this.tail;
+		this.tail = current;
+		return true;
 	 }
 	 /* remove element from front */
 	 public E poll() {
